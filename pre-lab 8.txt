@@ -1,0 +1,31 @@
+int recibir;
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+  Serial.println("Escoja una opcion");
+}
+
+void loop() {
+  Serial.println("Cara alegre: Ingrese 1");
+  Serial.println("Cara triste: Ingrese 2");
+  Serial.println("Cara linda: Ingrese 3");
+  while (Serial.available()==0){
+    
+  }
+  if (Serial.available()>0){
+    recibir = Serial.parseInt();
+    if (recibir == 1){
+      Serial.println(":)");
+    }
+    else if (recibir == 2){
+      Serial.println(";(");
+    }
+    else if (recibir == 3){
+      Serial.println(">.<");
+    }
+    else{
+      Serial.println("Vuelva a intentar");
+    }
+    Serial.println();
+  }
+}
