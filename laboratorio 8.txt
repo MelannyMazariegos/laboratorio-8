@@ -1,0 +1,74 @@
+#include <SPI.h>
+#include <SD.h>
+int recibir;
+File myFile;
+File myFile1;
+File myFile2;
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+  SPI.setModule(0);
+  Serial.print("Initializing SD card...");
+  if (!SD.begin(32)) {
+    Serial.println("initialization failed!");
+    return;
+  }
+  Serial.println("initialization done.");
+
+  Serial.println("Escoja una opcion");
+  Serial.println("Archivo 1: Ingrese 1");
+  Serial.println("Archivo 2: Ingrese 2");
+  Serial.println("Archivo 3: Ingrese 3");
+}
+
+void loop() {
+  if (Serial.available()>0){
+    recibir = Serial.parseInt();
+    if (recibir == 1){
+      myFile = SD.open("perro.txt");
+      if (myFile){
+        Serial.println("perro.txt");
+        while (myFile.available()){
+          Serial.write(myFile.read());
+        }
+        myFile.close();
+      }
+      else{
+        Serial.println("error al abrir el archivo");
+      }
+    }
+    else if (recibir == 2){
+      myFile1 = SD.open("sol.txt");
+      if (myFile1){
+        Serial.println("sol.txt");
+        while (myFile1.available()){
+          Serial.write(myFile1.read());
+        }
+        myFile1.close();
+      }
+      else{
+        Serial.println("error al abrir el archivo");
+      }
+    }
+    else if (recibir == 3){
+      myFile2 = SD.open("arbol.txt");
+      if (myFile2){
+        Serial.println("arbol.txt");
+        while (myFile2.available()){
+          Serial.write(myFile2.read());
+        }
+        myFile2.close();
+      }
+      else{
+        Serial.println("error al abrir el archivo");
+      }
+    }
+    else{
+      Serial.println("Vuelva a intentar");
+    }
+    Serial.println("Archivo 1: Ingrese 1");
+    Serial.println("Archivo 2: Ingrese 2");
+    Serial.println("Archivo 3: Ingrese 3");
+    Serial.println();
+  }
+}
