@@ -1,24 +1,32 @@
+//Se incluyen librerias
 #include <SPI.h>
 #include <SD.h>
+//Se declaran las variables
 int recibir;
-File myFile;
+File myFile; //Se crean 3 file para evitar confusiones en los archivos
 File myFile1;
 File myFile2;
 File creacion;
+//Se crea la matriz para el dibujo
 const int filas = 11;
 const int columnas = 21;
 char dibujo[11][21];
 void setup() {
   // put your setup code here, to run once:
+  //Se inicia el monitor serial
   Serial.begin(9600);
+  //Se declara el modulo para la comunicacion SPI
   SPI.setModule(0);
+  //Se inicializa la SD
   Serial.print("Initializing SD card...");
   if (!SD.begin(32)) {
+    //Si falla se muestra este mensaje
     Serial.println("initialization failed!");
     return;
   }
+  //Si es exitosa se muestra este mensaje
   Serial.println("initialization done.");
-
+  //Se le pide al usuario que escoja una opcion
   Serial.println("Escoja una opcion");
   Serial.println("Archivo 1: Ingrese 1");
   Serial.println("Archivo 2: Ingrese 2");
@@ -27,10 +35,14 @@ void setup() {
 }
 
 void loop() {
+  //Espera a que el usuario ingrese un valor
   if (Serial.available()>0){
+    //Se lee el dato que el usuario ingresa
     recibir = Serial.parseInt();
     if (recibir == 1){
+      //Se abre el archivo perro.txt cuando el usuario ingresa 1
       myFile = SD.open("perro.txt");
+      //Si se abre correctamente se muestra en el monitor serial
       if (myFile){
         Serial.println("perro.txt");
         while (myFile.available()){
@@ -38,12 +50,15 @@ void loop() {
         }
         myFile.close();
       }
+      //Si no se abre se muestra este mensaje
       else{
         Serial.println("error al abrir el archivo");
       }
     }
     else if (recibir == 2){
+      //Se abre el archivo sol.txt cuando el usuario ingresa 2
       myFile1 = SD.open("sol.txt");
+      //Si se abre correctamente se muestra en el monitor serial
       if (myFile1){
         Serial.println("sol.txt");
         while (myFile1.available()){
@@ -51,11 +66,13 @@ void loop() {
         }
         myFile1.close();
       }
+      //Si no se abre se muestra este mensaje
       else{
         Serial.println("error al abrir el archivo");
       }
     }
     else if (recibir == 3){
+      //Se abre el archivo arbol.txt cuando el usuario ingresa 3
       myFile2 = SD.open("arbol.txt");
       if (myFile2){
         Serial.println("arbol.txt");
@@ -64,19 +81,23 @@ void loop() {
         }
         myFile2.close();
       }
+      //Si no se abre se muestra este mensaje
       else{
         Serial.println("error al abrir el archivo");
       }
     }
     else if (recibir == 4){
+      //Si el usuario ingresa 4 permite que dibuje en la matriz
       Serial.println("Dibuja utilizando 'Y' y ' ' para dejar espacio y 'T' para terminar ");
       Serial.println("Tienes espacio de 20 columnas y 10 filas");
-      dibujar();
-      guardar();
+      dibujar(); //Funcion para dibujar
+      guardar(); //Funcion para guardar la imagen 
     }
     else{
+      //Si se ingresa otro numero se muestra este mensaje
       Serial.println("Vuelva a intentar");
     }
+    //Se vuelve a preguntar al usuario que escoja una opcion
     Serial.println("Archivo 1: Ingrese 1");
     Serial.println("Archivo 2: Ingrese 2");
     Serial.println("Archivo 3: Ingrese 3");
@@ -85,14 +106,19 @@ void loop() {
   }
 }
 void dibujar(){
+  //Se utilizan ciclos for para permitir que el usuario dibuje
   for (int i = 0; i < filas; i++){
     for (int j = 0; j < columnas; j++){
+      //Se espera a que el usuario ingrese valores
       while (Serial.available() == 0){
       }
+      //Se lee lo que ingresa el usuario
       char letra = Serial.read();
       if (letra == 'Y' || letra == 'y'){
+        //Se manda la letra Y en la posicion correspondiente
         dibujo[i][j] = 'Y';
       } 
+      //Si el usuario ingresa una letra T se sale del ciclo
       else if (letra == 'T' || letra == 't'){
         Serial.println("Dibujo terminado");
         return;
@@ -101,18 +127,22 @@ void dibujar(){
   }
 }
 void guardar(){
+  //Se abre el archivo para guardar la imagen
   creacion = SD.open("post.txt", FILE_WRITE);
   if (creacion){
+    //Se manda la imagen que se creo anteriormente
     for (int i = 0; i < filas; i++){
       for (int j = 0; j < columnas; j++){
         creacion.print(dibujo[i][j]);
       }
       creacion.println();
     }
+    //Se cierra el archivo y se manda un mensaje
     creacion.close();
     Serial.println("Imagen guardada, revisar micro SD");
   }
   else{
+    //Si no se abre el archivo, se muestra este mensaje
     Serial.println("Error al abrir el archivo");
   }
 }

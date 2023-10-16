@@ -1,20 +1,27 @@
+//Se incluyen librerias
 #include <SPI.h>
 #include <SD.h>
+//Se declaran las variables
 int recibir;
-File myFile;
+File myFile; //Se crean 3 file para evitar confusiones en los archivos
 File myFile1;
 File myFile2;
 void setup() {
   // put your setup code here, to run once:
+  //Se inicia el monitor serial
   Serial.begin(9600);
+  //Se declara el modulo para la comunicacion SPI
   SPI.setModule(0);
+  //Se inicializa la SD
   Serial.print("Initializing SD card...");
   if (!SD.begin(32)) {
+    //Si falla se muestra este mensaje
     Serial.println("initialization failed!");
     return;
   }
+  //Si es exitosa se muestra este mensaje
   Serial.println("initialization done.");
-
+  //Se le pide al usuario que escoja una opcion
   Serial.println("Escoja una opcion");
   Serial.println("Archivo 1: Ingrese 1");
   Serial.println("Archivo 2: Ingrese 2");
@@ -22,10 +29,14 @@ void setup() {
 }
 
 void loop() {
+  //Espera a que el usuario ingrese un valor
   if (Serial.available()>0){
+    //Se lee el dato que el usuario ingresa
     recibir = Serial.parseInt();
     if (recibir == 1){
+      //Se abre el archivo perro.txt cuando el usuario ingresa 1
       myFile = SD.open("perro.txt");
+      //Si se abre correctamente se muestra en el monitor serial
       if (myFile){
         Serial.println("perro.txt");
         while (myFile.available()){
@@ -33,12 +44,15 @@ void loop() {
         }
         myFile.close();
       }
+      //Si no se abre se muestra este mensaje
       else{
         Serial.println("error al abrir el archivo");
       }
     }
     else if (recibir == 2){
+      //Se abre el archivo sol.txt cuando el usuario ingresa 2
       myFile1 = SD.open("sol.txt");
+      //Si se abre correctamente se muestra en el monitor serial
       if (myFile1){
         Serial.println("sol.txt");
         while (myFile1.available()){
@@ -46,11 +60,13 @@ void loop() {
         }
         myFile1.close();
       }
+      //Si no se abre se muestra este mensaje
       else{
         Serial.println("error al abrir el archivo");
       }
     }
     else if (recibir == 3){
+      //Se abre el archivo arbol.txt cuando el usuario ingresa 3
       myFile2 = SD.open("arbol.txt");
       if (myFile2){
         Serial.println("arbol.txt");
@@ -59,13 +75,16 @@ void loop() {
         }
         myFile2.close();
       }
+      //Si no se abre se muestra este mensaje
       else{
         Serial.println("error al abrir el archivo");
       }
     }
     else{
+      //Si se ingresa otro numero se muestra este mensaje
       Serial.println("Vuelva a intentar");
     }
+    //Se vuelve a preguntar al usuario que escoja una opcion
     Serial.println("Archivo 1: Ingrese 1");
     Serial.println("Archivo 2: Ingrese 2");
     Serial.println("Archivo 3: Ingrese 3");
